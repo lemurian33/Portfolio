@@ -64,7 +64,7 @@ const projectsData: ProjectData[] = [
     btn: { href: "projects/Segment-c" },
     btn1: { href: "https://www.segment-c.com" },
     description:
-      "Segment C accompagne les propriétaires dans tous leurs projets de rénovation depuis plus de 15 ans. Site vitrine pour portfolio réalisation, fourniture...",
+      "Segment.C est le site vitrine de Rui De Carvalho, artisan menuisier basé à St jean d'illac. Fenêtres, baies vitrées, portes, pergolas bioclimatiques et volets — plus de 200 chantiers réalisés en Gironde, avec devis gratuit sous 48h et SAV garanti dans la durée.",
   },
   {
     reverse: false,
@@ -94,20 +94,6 @@ const projectsData: ProjectData[] = [
     description:
       "Mon Agent AI accompagne les entreprises dans leur évolution numérique — Création d'agents sur mesure (Claude, Paperclip, Ollama...), formation sur claude et intégration concrète de l'IA dans vos processus métier, sans compromis sur la souveraineté de vos données.",
   },
-  // {
-  //   reverse: false,
-  //   subTitle: "Site vitrine",
-  //   title: "my movie app",
-  //   time: "7 jrs",
-  //   mission: "test technique",
-  //   developpement: "Full-Stack",
-  //   image: MovieImg,
-  //   contentType: "project",
-  //   btn: { href: "#" },
-  //   btn1: { href: "https://test-technique-cda-4s7t.vercel.app/" },
-  //   description:
-  //     "Movie app est une application permettant de faire une recherche sur un film en fonction du titre, année ou le type en effectuant une requête à l'API TMDB. L'application permet également de visualiser les détails du film, les acteurs et le synopsis.",
-  // },
   {
     reverse: false,
     subTitle: "Site vitrine",

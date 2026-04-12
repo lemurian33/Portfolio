@@ -11,8 +11,8 @@ export const FloatingLegalFooter = () => {
                     sm:flex-row lg:px-6">
       <Typography variant="muted" className="italic">
         &copy; {new Date().getFullYear()}{" "}
-        <Link href="/" className="text-orange-500">
-          Portfolio{" "}
+        <Link href="https://project-ar-01.vercel.app" className="text-orange-500">
+          Création de site{" "}
         </Link>
         Tous droits réservés.
         <br className="md:hidden" /> Crée avec{" "}
@@ -31,7 +31,7 @@ export const FloatingLegalFooter = () => {
         >
           Cvg
         </Link> */}
-        <Link
+        {/* <Link
           className="text-xs text-muted-foreground hover:text-foreground
                      transition-colors hover:underline"
           href="/legal/privacy"
@@ -46,8 +46,8 @@ export const FloatingLegalFooter = () => {
           target="_blank"
         >
           Mentions légales
-        </Link>
-        <Link href="/auth/signin?callbackUrl=/">
+        </Link> */}
+        <Link href="https://project-ar-01.vercel.app/">
           <Image
             src={SiteConfig.appIcon}
             width={18}
