@@ -1,0 +1,150 @@
+---
+title: Quand GitHub vous marque comme spam : comment j'ai perdu un compte et reconstruit ma stack en 24h
+description: Un déploiement Coolify qui échoue, une erreur cryptique, et un compte GitHub inaccessible. Voici comment j'ai diagnostiqué le problème et remis en production sans perdre une ligne de code.
+keywords:
+  - github ban spam
+  - coolify deployment error
+  - git credentials wsl
+  - github support debannissement
+  - devops incident recovery
+tags:
+  - Developpement
+coverUrl: /images/blog/github-ban-coolify.jpg
+status: published
+date: 2026-04-12
+---
+
+Tout a commencé comme n'importe quelle session de travail. Un `git push`, une attente, et puis... rien. Enfin, pas tout à fait rien. Un message d'erreur que je n'avais jamais vu auparavant :
+
+```bash
+Deployment failed: GitHub API call failed:
+Error: The owner of this application has been marked as spammy.
+Rate Limit Status:
+- Remaining Calls:
+- Reset Time: 1970-01-01 00:00:00 UTC
+```
+
+Spammy. Mon compte GitHub. Marqué comme spam. Sans avertissement, sans email, sans explication.
+
+<Callout type="info" icon="💡">
+  **Ce que vous allez apprendre :** Comment diagnostiquer un ban GitHub, contourner le blocage sans tout casser, et reconfigurer un pipeline Coolify + WSL en moins de 24h.
+</Callout>
+
+---
+
+## 1. Le diagnostic : comprendre l'erreur complète
+
+L'erreur brute dans les logs Coolify était la suivante :
+
+```bash
+GitHub API call failed:
+Error: The owner of this application has been marked as spammy.
+Rate Limit Status:
+- Remaining Calls:
+- Reset Time: 1970-01-01 00:00:00 UTC
+Location: /var/www/html/bootstrap/helpers/github.php:103
+```
+
+Deux informations clés ici : le compte est blacklisté côté API GitHub, et le Reset Time à `1970-01-01` indique que ce n'est pas un simple rate limit temporaire — c'est un ban actif.
+
+<Callout type="warning" icon="⚠️">
+  **Ne pas confondre avec un rate limit classique :** Un rate limit GitHub se résout en attendant quelques minutes. Un compte marqué "spammy" bloque l'accès API indéfiniment jusqu'à résolution manuelle via le support GitHub.
+</Callout>
+
+---
+
+## 2. La solution immédiate : contourner sans casser
+
+Attendre la réponse du support GitHub peut prendre 24 à 72h. Impossible de bloquer un déploiement aussi longtemps. J'avais un second compte GitHub disponible — la solution était là.
+
+### Étape 1 — Connecter le second compte à Coolify
+
+- Coolify → **Settings → Sources → Add GitHub Account**
+- Authentifier avec le compte secondaire
+- Modifier l'application → changer la source Git vers le nouveau compte
+
+### Étape 2 — Copier les projets localement sans cloner
+
+Le compte banni bloquait aussi les clones via API. Solution : copier directement les dossiers depuis le workspace local, puis reconfigurer les remotes.
+
+```bash
+cp -r /home/user/code/MainAccount/projet /home/user/code/SecondAccount/
+cd /home/user/code/SecondAccount/projet
+git remote set-url origin https://github.com/secondaccount/projet.git
+```
+
+### Étape 3 — Résoudre le conflit de credentials Git sur WSL
+
+Sur WSL, Git utilise le Windows Credential Manager par défaut. Résultat : même après avoir changé la remote, les pushs s'authentifiaient toujours avec le compte banni.
+
+<Callout type="warning" icon="⚠️">
+  **Attention aux commandes globales :** Ne jamais utiliser `git config --global credential.helper` pour résoudre ce problème si vous avez plusieurs comptes actifs — cela écrase la config de tous vos projets. Utilisez toujours `--local`.
+</Callout>
+
+La solution propre, repo par repo, sans toucher à la config globale :
+
+```bash
+git config --local credential.helper "!f() { echo username=secondaccount; echo password=TON_TOKEN; }; f"
+git push origin main
+```
+
+Le token est un **Personal Access Token** généré depuis GitHub → Settings → Developer settings → Tokens (classic), avec le scope `repo` activé.
+
+---
+
+## 3. Récupérer le compte banni
+
+En parallèle, j'ai ouvert un ticket support GitHub :
+
+<Callout type="info" icon="💡">
+  **Message type pour le support GitHub :** "My account has been flagged as spammy. I believe this is a mistake. Could you please review and remove the spam flag? Thank you." Rendez-vous sur [support.github.com](https://support.github.com) → Contact Support → Account access.
+</Callout>
+
+Délai de réponse habituel : **24h à 72h**. Une fois le flag retiré, il suffit de rebrancher Coolify sur le compte principal et de remettre les remotes d'origine.
+
+---
+
+## 4. Récapitulatif — Les commandes qui sauvent
+
+| Situation | Commande |
+|---|---|
+| Changer la remote d'un repo | `git remote set-url origin https://github.com/compte/repo.git` |
+| Forcer les credentials sur un repo uniquement | `git config --local credential.helper "..."` |
+| Vérifier le compte GitHub CLI actif | `gh auth status` |
+| Copier un projet local sans cloner | `cp -r source/ destination/` |
+| Vérifier la remote active | `git remote -v` |
+
+---
+
+## 5. Ce que j'aurais dû faire avant
+
+- **Avoir un compte GitHub de secours** configuré et prêt — pas seulement créé.
+- **Utiliser des Deploy Keys SSH** dans Coolify plutôt qu'une GitHub App liée à un compte personnel.
+- **Documenter les tokens et remotes** de chaque projet dans un gestionnaire de secrets.
+- **Ne jamais avoir un seul point de défaillance** sur son pipeline de déploiement.
+
+<Callout type="success" icon="✅">
+  **Tips pour éviter le ban GitHub :** Évitez les pushs massifs automatisés sans pause, les créations de repos en rafale, et les comportements qui ressemblent à du scraping. GitHub détecte les patterns inhabituels et peut bannir préventivement — même sans mauvaise intention.
+</Callout>
+
+---
+
+## Conclusion
+
+Un ban de compte GitHub peut arriver à n'importe qui, sans prévenir. L'important n'est pas d'éviter le problème à tout prix — c'est d'avoir les bons réflexes pour le contourner rapidement sans tout casser.
+
+En moins de 24h, tous les projets étaient de nouveau en production. Sans perte de données, sans refonte de l'infrastructure, et avec une config Git plus robuste qu'avant.
+
+<Callout type="info" icon="🎯">
+  **Vous avez un pipeline de déploiement fragile ?** Je propose un **audit technique gratuit** de votre stack (Coolify, Vercel, Railway...) pour identifier les points de défaillance uniques et les corriger avant qu'ils ne deviennent un problème. Sans engagement, 30 minutes suffisent.
+</Callout>
+
+---
+
+## Sources
+
+- [GitHub Support — Signalement de compte](https://support.github.com)
+- [GitHub Docs — Personal Access Tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+- [Coolify Docs — GitHub Integration](https://coolify.io/docs)
+- [GitHub Docs — Deploy Keys vs GitHub Apps](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app)
+- [Git Docs — git config credential.helper](https://git-scm.com/docs/git-config)
