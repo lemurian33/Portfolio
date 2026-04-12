@@ -34,7 +34,7 @@ export default function Hero() {
           </li>
           <li>
             <Link
-              href="https://github.com/lemurian33"
+              href="https://github.com/andyrama"
               target="_blank"
               className="hover:text-orange-500 transition duration-300 mr-20"
             >

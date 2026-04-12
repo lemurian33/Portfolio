@@ -12,10 +12,12 @@ import UnlcoachingImg from "@images/unlcoaching.png";
 import Portfolio      from "@images/portfolio.png";
 import HomeKasa       from "@images/HomeKasa.png";
 import HomeWealth     from "@images/WealthHealth_1.png";
-import HomeSegment    from "@images/home-segment.png";
+import HomeSegment    from "@images/segment-hero.webp";
 import HomRenovXp    from "@images/renov-expert.jpg";
 import HomeCabinet    from "@images/home-cabinet.png";
 import MovieImg       from "@images/movie.png";
+import HomeAgentAi   from "@images/mon-agent-ai-hero.webp";
+import HomeLemurian       from "@images/lemurian-agency-hero.webp";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -48,7 +50,7 @@ const projectsData: ProjectData[] = [
     btn: { href: "projects/renovexpert" },
     btn1: { href: "https://renovexp.vercel.app/" },
     description:
-      "Segment C accompagne les propriétaires dans tous leurs projets de rénovation depuis plus de 15 ans. Site vitrine pour portfolio réalisation, fourniture...",
+      "Renov Experts est le site vitrine de Mathieu Hernandez, artisan menuisier basé à Mérignac. Fenêtres, baies vitrées, pergolas bioclimatiques et volets — plus de 200 chantiers réalisés en Gironde, avec devis gratuit sous 48h et SAV garanti dans la durée.",
   },
   {
     reverse: true,
@@ -63,6 +65,34 @@ const projectsData: ProjectData[] = [
     btn1: { href: "https://www.segment-c.com" },
     description:
       "Segment C accompagne les propriétaires dans tous leurs projets de rénovation depuis plus de 15 ans. Site vitrine pour portfolio réalisation, fourniture...",
+  },
+  {
+    reverse: false,
+    subTitle: "Site vitrine",
+    title: "Lemurian Agency",
+    time: "4 jrs",
+    mission: "Client Final",
+    developpement: "Full-Stack",
+    image: HomeLemurian,
+    contentType: "project",
+    btn: { href: "projects/lemurian" },
+    btn1: { href: "https://project-ar-01.vercel.app" },
+    description:
+      "Lemurian Agency est une agence spécialisée en création de sites web et SEO local pour les artisans et indépendants. Stratégie SEO, optimisation Google Business Profile et partenariat au lead — pour transformer la visibilité Google en machine à générer des clients qualifiés",
+  },
+  {
+    reverse: true,
+    subTitle: "Site vitrine",
+    title: "Mon agent ai",
+    time: "30 jrs",
+    mission: "Client Final",
+    developpement: "Full-Stack",
+    image: HomeAgentAi,
+    contentType: "project",
+    btn: { href: "projects/mon-agent-ai" },
+    btn1: { href: "#" },
+    description:
+      "Mon Agent AI accompagne les entreprises dans leur évolution numérique — les agents IA en sont l'un des leviers clés. Création d'agents sur mesure (Claude, Paperclip, Ollama...), formation des équipes et déploiement sur serveurs conformes RGPD. Une intégration concrète de l'IA dans vos processus métier, sans compromis sur la souveraineté de vos données.",
   },
   {
     reverse: false,
@@ -123,14 +153,14 @@ const projectsData: ProjectData[] = [
   {
     reverse: false,
     subTitle: "Site vitrine",
-    title: "Portfolio",
+    title: "Portfolio v2",
     time: "1 mois",
     mission: "Side Project",
     developpement: "Full-Stack",
     image: Portfolio,
     contentType: "project",
     btn: { href: "projects/Andyramaroson" },
-    btn1: { href: "https://andyramaroson.com" },
+    btn1: { href: "https://project-ar-03.vercel.app/" },
     description:
       "Portfolio personnel présentant mes réalisations clients et projets personnels. Refonte complète avec Next.js, React, Tailwind CSS, Motion et déploiement sur VPS via Coolify.",
   },
